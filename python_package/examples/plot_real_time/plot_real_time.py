@@ -16,7 +16,8 @@ class Graph:
         self.board_shim = board_shim
         self.exg_channels = BoardShim.get_exg_channels(self.board_id)
         self.sampling_rate = BoardShim.get_sampling_rate(self.board_id)
-        self.update_speed_ms = 50
+        # self.update_speed_ms = 50
+        self.update_speed_ms = 500
         self.window_size = 4
         self.num_points = self.window_size * self.sampling_rate
 
@@ -89,6 +90,7 @@ class Graph:
         avg_bands = [0, 0, 0, 0, 0]
         for count, channel in enumerate(self.exg_channels):
             # plot timeseries
+            # print(f"data: {data[channel][0]}")
             DataFilter.detrend(data[channel], DetrendOperations.CONSTANT.value)
             DataFilter.perform_bandpass(data[channel], self.sampling_rate, 3.0, 45.0, 2,
                                         FilterTypes.BUTTERWORTH_ZERO_PHASE, 0)
@@ -129,7 +131,8 @@ def main():
     parser.add_argument('--ip-protocol', type=int, help='ip protocol, check IpProtocolType enum', required=False,
                         default=0)
     parser.add_argument('--ip-address', type=str, help='ip address', required=False, default='')
-    parser.add_argument('--serial-port', type=str, help='serial port', required=False, default='')
+    # parser.add_argument('--serial-port', type=str, help='serial port', required=False, default='/dev/ttyUSB1')
+    parser.add_argument('--serial-port', type=str, help='serial port', required=False, default='COM4')
     parser.add_argument('--mac-address', type=str, help='mac address', required=False, default='')
     parser.add_argument('--other-info', type=str, help='other info', required=False, default='')
     parser.add_argument('--streamer-params', type=str, help='streamer params', required=False, default='')
@@ -153,7 +156,8 @@ def main():
     params.file = args.file
     params.master_board = args.master_board
 
-    board_shim = BoardShim(args.board_id, params)
+    # board_shim = BoardShim(args.board_id, params)
+    board_shim = BoardShim(56, params)
     try:
         board_shim.prepare_session()
         board_shim.start_stream(450000, args.streamer_params)
