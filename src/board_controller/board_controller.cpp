@@ -53,6 +53,8 @@
 #include "streaming_board.h"
 #include "synthetic_board.h"
 #include "unicorn_board.h"
+#include "geenie.h"
+#include "egeenie.h"
 
 #include "json.hpp"
 
@@ -276,6 +278,12 @@ int prepare_session (int board_id, const char *json_brainflow_input_params)
             break;
         case BoardIds::EXPLORE_PLUS_32_CHAN_BOARD:
             board = std::shared_ptr<Board> (new Explore (board_id, params));
+            break;
+        case BoardIds::GEENIE_BOARD:
+            board = std::shared_ptr<Board> (new Geenie (params));
+            break;
+        case BoardIds::EGEENIE_BOARD:
+            board = std::shared_ptr<Board> (new Egeenie (params));
             break;
         default:
             return (int)BrainFlowExitCodes::UNSUPPORTED_BOARD_ERROR;
